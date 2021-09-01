@@ -1,56 +1,64 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DataService } from '../services/data.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
+  
 })
 export class LoginComponent implements OnInit {
   
   
-  aim="welcome to sbl bank"
-  acno="Account NUmber please"
+  aim="welcome"
+  acno="acount number please"
  
   pswd=""
-  users:any = {
-    1000: {acno: 1000, username: "vishnu" , password: "userone", balance: 2000},
-    1001: {acno: 1001, username: "revathy" , password: "usertwo", balance: 4000},
-    1002: {acno: 1002, username: "renuka" , password: "userthree", balance: 9000},
-    1003: {acno: 1003, username: "lachu" , password: "userfour", balance: 8000}
-  }
 
-  constructor(private router:Router){}
+
+  loginForm = this.fb.group({
+    acno : ['',[Validators.required,Validators.pattern('[0-9]*')]],
+    pswd : ['', [Validators.required,Validators.pattern('[a-zA-Z0-9]*')]]
+  })
+  
+
+  constructor(private router:Router,private ds:DataService, private fb:FormBuilder ){}
 
 
   ngOnInit(): void {
   }
-  /*acNumber(event:any){
-    this.acno.target.vlue
-  }
-  pswChange(event:any){
-    this.pswd = event.target.value
-  }*/
+  
   login(){
-    var acno=this.acno;
-    console.log(acno)
-    var pswd=this.pswd;
-    console.log(pswd)
-    
+  
+  
+   
+if(this.loginForm.valid){
 
-    let accDetails = this.users
-     if(acno in accDetails){
-       if(pswd == accDetails[acno]["password"]){
-         alert("login successful")
-         this.router.navigateByUrl("dashboard");
+
+  var acno=this.loginForm.value.acno;
+  var pswd=this.loginForm.value.pswd;
+     
+this.ds.login(acno,pswd)  
+.subscribe((result:any)=>{
+
+  if(result){
+         alert(result.message)
+         localStorage.setItem("userName",result.userName)
+         localStorage.setItem("currentAcc",result.currentAcc)
+         this.router.navigateByUrl("dashboard")
+
        }
-       else{
-         alert("invalid password")
-       }
-     }
-     else{
-      alert("invalid account number")
-    }
+},  
+ 
+result=>{
+  console.log(result.error.message);
+  
+ alert(result.error.message )
+})
 
-  }
+}
 
+}
 }

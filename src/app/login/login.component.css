@@ -1,4 +1,10 @@
-
+body{
+    background-color: aquamarine;
+}
+.head{
+    color:red;
+    
+}
         .login-btn{
             text-align: center;
         }

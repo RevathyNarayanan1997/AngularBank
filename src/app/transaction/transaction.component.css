@@ -1,0 +1,13 @@
+body{
+    color:red
+}
+.head{
+    left: auto;
+    flex: auto;
+    text-align: center;
+    font-family:'Anton', sans-serif;
+
+}
+.text{
+    text-align: center;
+}
